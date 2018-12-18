@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.1.0/echarts.min.js"></script>
+    <script src="dist/echarts-wordcloud.min.js"></script>
+</head>
+<body>
+    <div id="main" style="width:600px;height:400px;"></div>
+    <script>
+    $(function(){
+
+        echartsCloud();//初始化echarts图
+    })
+function echartsCloud(){
+    // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+ 
+    myChart.setOption({
+        title: {
+            text: 'echarts3云图展示'
+        },
+        tooltip: {},
+        series: [{
+            type : 'wordCloud',  //类型为字符云
+                shape:'smooth',  //平滑
+                gridSize : 2, //网格尺寸
+                size : ['80%','80%'],
+                //sizeRange : [ 50, 100 ],  
+                rotationRange : [ 46, 80 ], //旋转范围
+                textStyle : {  
+                    normal : {
+                        fontFamily:'sans-serif',
+                        color : function() {  
+                            return 'rgb('  
+                                    + [ Math.round(Math.random() * 160),  
+                                            Math.round(Math.random() * 160),  
+                                            Math.round(Math.random() * 160) ]  
+                                            .join(',') + ')';  
+                        }  
+                    },  
+                    emphasis : {  
+                        shadowBlur : 5,  //阴影距离
+                        shadowColor : '#333'  //阴影颜色
+                    }  
+                },
+                data:[],
+        }]
+    });
+    // 异步加载数据
+    $.get('./cloud.json').done(function (data) {
+    	console.log(JSON.stringify(data))
+        // 填入数据
+        myChart.setOption({
+            series: [{
+                data: data.dataCloud
+            }]
+        });
+    });
+}  
+ 
+ 
+    </script>
+</body>
+</html>
